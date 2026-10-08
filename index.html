@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>KFAS Science Month 2026 · شهر العلوم</title>
+  <meta name="description" content="Maths is everywhere: play the KFAS Science Month 2026 game, climb the leaderboard and win prizes. الرياضيات في كل مكان">
+  <meta name="theme-color" content="#F4F8FD">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="KFAS Maths">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Maths is everywhere · الرياضيات في كل مكان">
+  <meta property="og:description" content="KFAS Science Month 2026 · شهر العلوم. Play, climb the leaderboard, win prizes.">
+  <meta property="og:url" content="https://othmanalkhedher.github.io/kfas50/">
+  <meta property="og:image" content="https://othmanalkhedher.github.io/kfas50/TemplateData/share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="TemplateData/icon.png">
+  <link rel="apple-touch-icon" href="TemplateData/icon.png">
+  <link rel="preload" as="image" href="TemplateData/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Changa:wght@500;700;800&display=swap">
+  <style>
+    :root {
+      --bg: #F4F8FD; --ink: #16283C; --muted: #56687B; --orange: #F36D20; --track: #DCE8F5;
+      --c1: #C2E0F5; --c2: #84BFEA; --c3: #4A90CE; --c4: #FED07E; --c5: #F7931E; --c6: #EF6024;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden;
+      touch-action: manipulation; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+    body { font-family: "Changa", "Segoe UI", system-ui, -apple-system, "Geeza Pro", "Noto Sans Arabic", sans-serif; color: var(--ink); }
+    #unity-canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; margin: 0 auto; background: var(--bg); outline: none; }
+
+    #loader { position: fixed; inset: 0; z-index: 10; background: var(--bg);
+      background-image: linear-gradient(rgba(86,159,214,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(86,159,214,.09) 1px, transparent 1px);
+      background-size: 12.5vmin 12.5vmin;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: max(24px, env(safe-area-inset-top)) 24px max(36px, env(safe-area-inset-bottom));
+      transition: opacity .5s ease, visibility .5s; text-align: center; }
+    #loader.done { opacity: 0; visibility: hidden; }
+    .burst { position: absolute; top: 0; left: 0; width: min(30vw, 30vh, 220px); pointer-events: none; }
+    .stripe { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; display: flex; }
+    .stripe i { flex: 1; }
+    .wrap { position: relative; width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .logo { width: min(78%, 320px); height: auto; margin-bottom: 10px; }
+    .kicker { color: var(--orange); font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+    h1 { margin: 0; font-size: clamp(30px, 8.6vw, 44px); line-height: 1.05; font-weight: 800; text-wrap: balance; }
+    h1 span { display: block; font-size: .8em; margin-top: 6px; }
+    .bar { width: 86%; height: 14px; border-radius: 99px; background: var(--track); overflow: hidden; margin-top: 18px;
+      box-shadow: inset 0 1px 2px rgba(22,40,60,.08); }
+    .fill { height: 100%; width: 0%; border-radius: 99px; transition: width .25s ease;
+      background: linear-gradient(90deg, var(--c5), var(--c6)); }
+    .row { width: 86%; display: flex; justify-content: space-between; align-items: baseline; color: var(--muted); font-size: 14px; font-weight: 500; }
+    .pct { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 700; font-size: 16px; }
+    .fact { min-height: 64px; margin-top: 18px; padding: 10px 16px; border-radius: 14px; background: #fff; width: 92%;
+      box-shadow: 0 1px 0 rgba(22,40,60,.05), 0 4px 18px rgba(74,144,206,.12); transition: opacity .35s; }
+    .fact b { display: block; color: var(--c3); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+    .fact p { margin: 0; font-size: 15px; line-height: 1.35; }
+    .fact p + p { direction: rtl; margin-top: 2px; }
+    .err { display: none; margin-top: 18px; width: 92%; padding: 14px 16px; border-radius: 14px; background: #fff; border: 2px solid var(--c6); }
+    .err p { margin: 0 0 4px; font-size: 15px; }
+    .err button { margin-top: 10px; font: inherit; font-weight: 700; font-size: 17px; color: #fff; background: var(--orange);
+      border: 0; border-radius: 12px; padding: 10px 28px; cursor: pointer; }
+    #loader.failed .bar, #loader.failed .row, #loader.failed .fact { display: none; }
+    #loader.failed .err { display: block; }
+    @media (min-aspect-ratio: 3/4) { .burst { width: min(22vw, 34vh, 260px); } }
+  </style>
+</head>
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+  <div id="loader" role="status" aria-live="polite">
+    <img class="burst" src="TemplateData/burst.webp" alt="">
+    <div class="wrap">
+      <img class="logo" src="TemplateData/logo.webp" alt="KFAS 50 Years · Kuwait Foundation for the Advancement of Sciences" width="640" height="198">
+      <div class="kicker">Science Month 2026 · شهر العلوم 2026</div>
+      <h1>Maths is everywhere<span lang="ar" dir="rtl">الرياضيات في كل مكان</span></h1>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="row"><span id="status">Loading… · جاري التحميل</span><span class="pct" id="pct">0%</span></div>
+      <div class="fact" id="fact"><b>Did you know? · هل تعلم؟</b><p id="fen">π ≈ 3.14: the distance round any circle is about 3.14 times its width.</p><p id="far">محيط أي دائرة يساوي قطرها × 3.14 تقريباً، وهذا هو العدد باي.</p></div>
+      <div class="err" id="err">
+        <p id="err-en">The game could not load. Check your connection and try again.</p>
+        <p dir="rtl">ما قدرنا نحمّل اللعبة. تأكد من الإنترنت وحاول مرة ثانية.</p>
+        <button type="button" onclick="location.reload()">Try again · حاول مرة ثانية</button>
+      </div>
+    </div>
+    <div class="stripe" aria-hidden="true"><i style="background:var(--c1)"></i><i style="background:var(--c2)"></i><i style="background:var(--c3)"></i><i style="background:var(--c4)"></i><i style="background:var(--c5)"></i><i style="background:var(--c6)"></i></div>
+  </div>
+
+  <script>
+    (function () {
+      var loader = document.getElementById('loader');
+      var fill = document.getElementById('fill'), pct = document.getElementById('pct'), status = document.getElementById('status');
+      var facts = [
+        ['π ≈ 3.14: the distance round any circle is about 3.14 times its width.', 'محيط أي دائرة يساوي قطرها × 3.14 تقريباً، وهذا هو العدد باي.'],
+        ['Honeybees build hexagons: the shape that holds the most honey with the least wax.', 'النحل يبني خلايا سداسية: أكثر عسل بأقل شمع.'],
+        ['Sunflower seeds spiral in Fibonacci numbers: 21, 34, 55, 89…', 'بذور دوار الشمس تلتف بأعداد فيبوناتشي: 21، 34، 55، 89…'],
+        ['A computer counts in binary: 1, 10, 11, 100… only 0s and 1s.', 'الكمبيوتر يعد بالثنائي: 1، 10، 11، 100… أصفار وآحاد فقط.'],
+        ['Fold a paper in half 7 times and it is 128 sheets thick.', 'إذا طويت ورقة 7 مرات تصير سماكتها 128 ورقة.'],
+        ['The word “algorithm” comes from the name of al-Khwarizmi.', 'كلمة «خوارزمية» جاية من اسم العالم الخوارزمي.'],
+        ['Top 50 players this month win prizes. Every point counts!', 'أفضل 50 لاعب هالشهر يفوزون بجوائز. كل نقطة تفرق!']
+      ];
+      var fi = 0, fact = document.getElementById('fact');
+      var factTimer = setInterval(function () {
+        fact.style.opacity = 0;
+        setTimeout(function () {
+          fi = (fi + 1) % facts.length;
+          document.getElementById('fen').textContent = facts[fi][0];
+          document.getElementById('far').textContent = facts[fi][1];
+          fact.style.opacity = 1;
+        }, 350);
+      }, 4200);
+
+      function setProgress(p) {
+        var v = Math.max(0, Math.min(1, p));
+        fill.style.width = (v * 100).toFixed(1) + '%';
+        pct.textContent = Math.round(v * 100) + '%';
+        if (v >= 0.9) status.textContent = 'Almost ready… · لحظات وتبدأ';
+      }
+      function fail(msg) {
+        clearInterval(factTimer);
+        if (msg) document.getElementById('err-en').textContent = msg;
+        loader.classList.add('failed');
+      }
+      window.kfasLoader = { setProgress: setProgress, fail: fail };
+
+      var gl = document.createElement('canvas');
+      if (typeof WebAssembly !== 'object' || !(gl.getContext('webgl2') || gl.getContext('webgl'))) {
+        fail('This browser cannot run the game. Open the link in Safari or Chrome.');
+        return;
+      }
+
+      var canvas = document.getElementById('unity-canvas');
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/Web.data.unityweb",
+        frameworkUrl: buildUrl + "/Web.framework.js.unityweb",
+        codeUrl: buildUrl + "/Web.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "KFAS 50",
+        productVersion: "1.0",
+        showBanner: function (msg, type) { if (type === 'error') fail(); else console.warn(msg); }
+      };
+
+      var script = document.createElement('script');
+      script.src = buildUrl + "/Web.loader.js";
+      script.onerror = function () { fail(); };
+      script.onload = function () {
+        createUnityInstance(canvas, config, setProgress).then(function () {
+          setProgress(1);
+          clearInterval(factTimer);
+          setTimeout(function () { loader.classList.add('done'); }, 250);
+        }).catch(function (e) { console.error(e); fail(); });
+      };
+      document.body.appendChild(script);
+    })();
+  </script>
+</body>
+</html>
